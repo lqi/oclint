@@ -11,6 +11,7 @@ ENDMACRO(build_test)
 
 BUILD_TEST(CanaryTest)
 BUILD_TEST(TextReporterTest)
+BUILD_TEST(ColorTextReporterTest)
 BUILD_TEST(HTMLReporterTest)
 BUILD_TEST(XMLReporterTest)
 BUILD_TEST(JSONReporterTest)
