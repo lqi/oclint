@@ -208,8 +208,8 @@ int loadReporter(const char* executablePath)
             {
                 continue;
             }
-            string rulePath = defaultReportersPath + "/" + string(dirp->d_name);
-            void *reporterHandle = dlopen(rulePath.c_str(), RTLD_LAZY);
+            string reporterPath = defaultReportersPath + "/" + string(dirp->d_name);
+            void *reporterHandle = dlopen(reporterPath.c_str(), RTLD_LAZY);
             if (reporterHandle == NULL)
             {
                 cerr << dlerror() << endl;
