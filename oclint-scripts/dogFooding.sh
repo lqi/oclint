@@ -15,6 +15,8 @@ OCLINT_REPORTERS_SRC="$PROJECT_ROOT/oclint-reporters"
 OCLINT_REPORTERS_BUILD="$PROJECT_ROOT/build/oclint-reporters"
 OCLINT_CLANG_TOOLING_SRC="$PROJECT_ROOT/oclint-clang-tooling"
 OCLINT_CLANG_TOOLING_BUILD="$PROJECT_ROOT/build/oclint-clang-tooling"
+OCLINT_CLANG_PLUGIN_SRC="$PROJECT_ROOT/oclint-clang-plugin"
+OCLINT_CLANG_PLUGIN_BUILD="$PROJECT_ROOT/build/oclint-clang-plugin"
 OCLINT_RELEASE_BUILD="$PROJECT_ROOT/build/oclint-release"
 
 OCLINT_DOGFOODING="$PROJECT_ROOT/build/oclint-dogfooding"
@@ -23,6 +25,7 @@ OCLINT_DOGFOODING_RULES="$OCLINT_DOGFOODING/oclint-rules"
 OCLINT_DOGFOODING_METRICS="$OCLINT_DOGFOODING/oclint-metrics"
 OCLINT_DOGFOODING_REPORTERS="$OCLINT_DOGFOODING/oclint-reporters"
 OCLINT_DOGFOODING_CLANG_TOOLING="$OCLINT_DOGFOODING/oclint-clang-tooling"
+OCLINT_DOGFOODING_CLANG_PLUGIN="$OCLINT_DOGFOODING/oclint-clang-plugin"
 
 # only show existing dogfooding results
 if [ $# -eq 1 ] && [ "$1" = "show" ]; then
@@ -31,6 +34,7 @@ if [ $# -eq 1 ] && [ "$1" = "show" ]; then
     cat $OCLINT_DOGFOODING/dogfooding_rules_results.txt
     cat $OCLINT_DOGFOODING/dogfooding_reporters_results.txt
     cat $OCLINT_DOGFOODING/dogfooding_clang_tooling_results.txt
+    cat $OCLINT_DOGFOODING/dogfooding_clang_plugin_results.txt
     exit 0
 fi
 
@@ -41,6 +45,7 @@ mkdir -p $OCLINT_DOGFOODING_METRICS
 mkdir -p $OCLINT_DOGFOODING_RULES
 mkdir -p $OCLINT_DOGFOODING_REPORTERS
 mkdir -p $OCLINT_DOGFOODING_CLANG_TOOLING
+mkdir -p $OCLINT_DOGFOODING_CLANG_PLUGIN
 
 # generate compile_commands.json file
 cd $OCLINT_DOGFOODING_CORE
@@ -53,6 +58,8 @@ cd $OCLINT_DOGFOODING_REPORTERS
 cmake -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_CXX_COMPILER=$LLVM_BUILD/bin/clang++ -D CMAKE_C_COMPILER=$LLVM_BUILD/bin/clang -D LLVM_ROOT=$LLVM_BUILD -D OCLINT_SOURCE_DIR=$OCLINT_CORE_SRC -D OCLINT_BUILD_DIR=$OCLINT_CORE_BUILD $OCLINT_REPORTERS_SRC
 cd $OCLINT_DOGFOODING_CLANG_TOOLING
 cmake -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_CXX_COMPILER=$LLVM_BUILD/bin/clang++ -D CMAKE_C_COMPILER=$LLVM_BUILD/bin/clang -D LLVM_ROOT=$LLVM_BUILD -D OCLINT_SOURCE_DIR=$OCLINT_CORE_SRC -D OCLINT_BUILD_DIR=$OCLINT_CORE_BUILD $OCLINT_CLANG_TOOLING_SRC
+cd $OCLINT_DOGFOODING_CLANG_PLUGIN
+cmake -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -D CMAKE_CXX_COMPILER=$LLVM_BUILD/bin/clang++ -D CMAKE_C_COMPILER=$LLVM_BUILD/bin/clang -D LLVM_ROOT=$LLVM_BUILD -D OCLINT_SOURCE_DIR=$OCLINT_CORE_SRC -D OCLINT_BUILD_DIR=$OCLINT_CORE_BUILD $OCLINT_CLANG_PLUGIN_SRC
 
 # copy compile_commands.json to source folders respectively
 cp $OCLINT_DOGFOODING_CORE/compile_commands.json $OCLINT_CORE_SRC/compile_commands.json
@@ -60,6 +67,7 @@ cp $OCLINT_DOGFOODING_METRICS/compile_commands.json $OCLINT_METRICS_SRC/compile_
 cp $OCLINT_DOGFOODING_RULES/compile_commands.json $OCLINT_RULES_SRC/compile_commands.json
 cp $OCLINT_DOGFOODING_REPORTERS/compile_commands.json $OCLINT_REPORTERS_SRC/compile_commands.json
 cp $OCLINT_DOGFOODING_CLANG_TOOLING/compile_commands.json $OCLINT_CLANG_TOOLING_SRC/compile_commands.json
+cp $OCLINT_DOGFOODING_CLANG_PLUGIN/compile_commands.json $OCLINT_CLANG_PLUGIN_SRC/compile_commands.json
 
 # dog fooding for core
 cd $OCLINT_CORE_SRC
@@ -81,12 +89,17 @@ $OCLINT_RELEASE_BUILD/bin/oclint-json-compilation-database -- -o $OCLINT_DOGFOOD
 cd $OCLINT_CLANG_TOOLING_SRC
 $OCLINT_RELEASE_BUILD/bin/oclint-json-compilation-database -- -o $OCLINT_DOGFOODING/dogfooding_clang_tooling_results.txt
 
+# dog fooding for clang-plugin
+cd $OCLINT_CLANG_PLUGIN_SRC
+$OCLINT_RELEASE_BUILD/bin/oclint-json-compilation-database -- -o $OCLINT_DOGFOODING/dogfooding_clang_plugin_results.txt
+
 # display the results
 cat $OCLINT_DOGFOODING/dogfooding_core_results.txt
 cat $OCLINT_DOGFOODING/dogfooding_metrics_results.txt
 cat $OCLINT_DOGFOODING/dogfooding_rules_results.txt
 cat $OCLINT_DOGFOODING/dogfooding_reporters_results.txt
 cat $OCLINT_DOGFOODING/dogfooding_clang_tooling_results.txt
+cat $OCLINT_DOGFOODING/dogfooding_clang_plugin_results.txt
 
 # back to the current folder
 cd $CWD

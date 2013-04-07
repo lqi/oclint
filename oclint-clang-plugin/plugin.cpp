@@ -67,7 +67,6 @@ int dynamicLoadRules(string ruleDirPath)
                 continue;
             }
             string rulePath = ruleDirPath + "/" + string(dirp->d_name);
-            cout << "each rule path: " << rulePath << endl;
             if (dlopen(rulePath.c_str(), RTLD_LAZY) == NULL)
             {
                 cerr << dlerror() << endl;
@@ -82,16 +81,13 @@ int dynamicLoadRules(string ruleDirPath)
 
 int consumeArgRulesPath(const char* executablePath)
 {
-    cout << "load rule: " << executablePath << endl;
     string exeStrPath = getExecutablePath(executablePath);
     string defaultRulePath = exeStrPath + "/../lib/oclint/rules";
-    cout << "full rule path" << defaultRulePath <<endl;
     return dynamicLoadRules(defaultRulePath);
 }
 
 int loadReporter(const char* executablePath)
 {
-    cout << "load reporter: " << executablePath << endl;
     selectedReporter = NULL;
     string exeStrPath = getExecutablePath(executablePath);
     string defaultReportersPath = exeStrPath + "/../lib/oclint/reporters";
@@ -179,7 +175,7 @@ protected:
     {
         if (args.size() == 0)
         {
-            llvm::errs() << "Please specify the oclint lib folder manually by -plugin-arg-oclint <path>\n";
+            cout << "Please specify the oclint lib folder manually by -plugin-arg-oclint <path>\n";
             return false;
         }
         string path = args[0];
