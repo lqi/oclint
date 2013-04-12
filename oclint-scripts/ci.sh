@@ -10,7 +10,6 @@
 ./buildReporters.sh clean
 ./buildClangTooling.sh clean
 ./buildClangPlugin.sh clean
-./buildRelease.sh clean
 ./testCore.sh
 ./testMetrics.sh
 ./testRules.sh
