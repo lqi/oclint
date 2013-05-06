@@ -10,15 +10,6 @@
 ./buildReporters.sh clean
 ./buildClangTooling.sh clean
 ./buildClangPlugin.sh clean
-./testCore.sh
-./testMetrics.sh
-./testRules.sh
-./testReporters.sh
-./buildCore.sh
-./buildMetrics.sh
-./buildRules.sh
-./buildReporters.sh
-./buildClangTooling.sh
-./buildClangPlugin.sh
-./buildRelease.sh
+./testAll.sh
+./buildAll.sh
 ./dogFooding.sh
